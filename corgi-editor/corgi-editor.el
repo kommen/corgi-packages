@@ -86,7 +86,11 @@
   :config (winum-mode 1))
 
 (use-package smartparens
-  :init (require 'smartparens-config)
+  :init (progn
+          (require 'smartparens)
+          (add-to-list 'sp-clojure-modes 'clojure-ts-mode)
+          (add-to-list 'sp-lisp-modes 'clojure-ts-mode)
+          (require 'smartparens-config))
   :diminish smartparens-mode
   :hook (prog-mode . smartparens-mode))
 
@@ -101,6 +105,7 @@
           clojurescript-mode
           clojurec-mode
           clojure-mode
+          clojure-ts-mode
           emacs-lisp-mode
           lisp-data-mode)
          . aggressive-indent-mode))
@@ -111,6 +116,7 @@
           clojurescript-mode
           clojurec-mode
           clojure-mode
+          clojure-ts-mode
           emacs-lisp-mode
           lisp-data-mode
           inferior-emacs-lisp-mode)

@@ -246,7 +246,7 @@ specific project."
                                     (rename-buffer "*babashka-repl*"))))))))
 
 (defun corgi/cider-modeline-info ()
-  (when (derived-mode-p 'clojure-mode)
+  (when (derived-mode-p 'clojure-mode 'clojure-ts-mode)
     (let ((source-project-name (projectile-project-name)))
       (if-let* ((repls (ignore-errors (cider-repls (cider-repl-type-for-buffer)))))
           (thread-last
@@ -302,9 +302,11 @@ for clj/cljs/bb, and extra info if the link goes to a different
 project or host."
   (interactive)
   (add-hook 'clojure-mode-hook #'corgi/enable-cider-connection-indicator-in-current-buffer)
+  (add-hook 'clojure-mode-ts-hook #'corgi/enable-cider-connection-indicator-in-current-buffer)
   (dolist (buf (buffer-list))
     (with-current-buffer buf
-      (when (eq 'clojure-mode major-mode)
+      (when (or (eq 'clojure-mode major-mode)
+                (eq 'clojure-ts-mode major-mode))
         (corgi/enable-cider-connection-indicator-in-current-buffer)))))
 
 (defun corgi/disable-cider-connection-indicator ()
@@ -314,6 +316,7 @@ for clj/cljs/bb, and extra info if the link goes to a different
 project or host."
   (interactive)
   (remove-hook 'clojure-mode-hook #'corgi/enable-cider-connection-indicator-in-current-buffer)
+  (remove-hook 'clojure-mode-ts-hook #'corgi/enable-cider-connection-indicator-in-current-buffer)
   (dolist (buf (buffer-list))
     (with-current-buffer buf
       (when corgi/original-mode-line-format
